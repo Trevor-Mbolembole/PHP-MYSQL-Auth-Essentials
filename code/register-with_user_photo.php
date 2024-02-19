@@ -10,6 +10,9 @@ function generateUserID() {
     return mt_rand(1000, 9999);
 }
 
+ // Hashing the password
+ $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
 // Function to handle profile picture upload
 function uploadProfilePicture($file) {
     $target_dir = "uploads/";
@@ -57,7 +60,6 @@ function registerUserWithProfilePic($fullname, $username, $phone, $email, $passw
     $password = $conn->real_escape_string($password);
     $profile_picture = $conn->real_escape_string($profile_picture);
     $user_id = generateUserID();
-
     // Checking if username or email already exists
     $check_query = "SELECT * FROM users WHERE username='$username' OR email='$email'";
     $check_result = $conn->query($check_query);
@@ -67,9 +69,11 @@ function registerUserWithProfilePic($fullname, $username, $phone, $email, $passw
 
     // Inserting user data into database
     $insert_query = "INSERT INTO users (user_id, full_name, username, phone_number, email, password, profile_picture) 
-                     VALUES ('$user_id', '$fullname', '$username', '$phone', '$email', '$password', '$profile_picture')";
+                     VALUES ('$user_id', '$fullname', '$username', '$phone', '$email', '$hashed_password', '$profile_picture')";
     if ($conn->query($insert_query) === TRUE) {
         return "User registered successfully.";
+        header("Location: login.php");
+        exit;
     } else {
         return "Error: " . $insert_query . "<br>" . $conn->error;
     }
