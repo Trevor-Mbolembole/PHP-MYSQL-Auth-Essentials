@@ -1,8 +1,8 @@
 <?php
 session_start(); // Start PHP session
 
-// Include database connection file
-require_once 'database.php';
+// Include database connection file (conn_db.php)
+require_once 'conn_db.php';
 
 // Function to generate a random 4-digit user ID
 function generateUserID() {
